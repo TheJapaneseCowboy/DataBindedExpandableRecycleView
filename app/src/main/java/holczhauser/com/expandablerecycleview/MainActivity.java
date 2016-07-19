@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ExpandableAdapter adapter = new ExpandableAdapter(getApplicationContext(), generateList(), recyclerView);
-        recyclerView.setAdapter(adapter);
+
+        recyclerView.setAdapter(new ExpandableAdapter(getApplicationContext(), generateList(), recyclerView));
     }
 
     private List<ParentObject> generateList() {
