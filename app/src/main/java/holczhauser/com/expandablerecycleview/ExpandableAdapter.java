@@ -3,7 +3,6 @@ package holczhauser.com.expandablerecycleview;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -19,7 +18,6 @@ public class ExpandableAdapter extends ExpandableRecyclerAdapter<ParentItemViewH
     private final LayoutInflater inflater;
     private final RecyclerView recyclerView;
     private ParentItemViewHolder parentVH;
-    private ChildItemViewHolder childViewHolder;
 
     public ExpandableAdapter(Context context, List<ParentObject> parentItemList, RecyclerView recyclerView) {
         super(context, parentItemList);
@@ -35,40 +33,26 @@ public class ExpandableAdapter extends ExpandableRecyclerAdapter<ParentItemViewH
 
     @Override
     public ChildItemViewHolder onCreateChildViewHolder(ViewGroup viewGroup) {
-        childViewHolder = new ChildItemViewHolder(DataBindingUtil.inflate(inflater, R.layout.child_item, viewGroup, false));
-        return childViewHolder;
+        return new ChildItemViewHolder(DataBindingUtil.inflate(inflater, R.layout.child_item, viewGroup, false));
     }
 
     @Override
-    public void onBindParentViewHolder(ParentItemViewHolder parentItemViewHolder, int i, Object o) {
-        ParentItem item = (ParentItem) o;
-        parentItemViewHolder.getViewDataBinding().setVariable(holczhauser.com.expandablerecycleview.BR.item, item);
+    public void onBindParentViewHolder(ParentItemViewHolder parentItemViewHolder, int i, Object object) {
+        parentItemViewHolder.getViewDataBinding().setVariable(holczhauser.com.expandablerecycleview.BR.item, (ParentItem) object);
     }
 
     @Override
-    public void onBindChildViewHolder(ChildItemViewHolder childItemViewHolder, int i, Object o) {
-        ChildItem item = (ChildItem) o;
-        childItemViewHolder.getViewDataBinding().setVariable(holczhauser.com.expandablerecycleview.BR.item, item);
+    public void onBindChildViewHolder(ChildItemViewHolder childItemViewHolder, int i, Object object) {
+        childItemViewHolder.getViewDataBinding().setVariable(holczhauser.com.expandablerecycleview.BR.item, (ChildItem) object);
     }
 
     @Override
     public void onParentItemClickListener(int position) {
         super.onParentItemClickListener(position);
-        if (!parentVH.isExpanded()) {
+        if (parentVH.isExpanded()) {
             recyclerView.smoothScrollToPosition(position);
-            recyclerView.smoothScrollBy(0, parentVH.itemView.getHeight() + 600);
+            recyclerView.smoothScrollBy(0, parentVH.itemView.getHeight() + 100);
         }
         parentVH.setExpanded(!parentVH.isExpanded());
-        collapseOthers(position);
-    }
-
-    private void collapseOthers(int positionToKeepOpen) {
-        int paretListSize = mParentItemList.size();
-        for (int i = 0; i < paretListSize; i++) {
-            if (i == positionToKeepOpen) {
-                continue;
-            }
-            super.onParentItemClickListener(i);
-        }
     }
 }
